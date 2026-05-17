@@ -15,7 +15,9 @@ if ($id > 0) {
     }
 }
 
-$page_title = $id > 0 ? 'Редактировать заказ #' . $id : 'Новый заказ';
+$page_title = $id > 0
+    ? '<span class="page-icon"><i class="fa-solid fa-pen"></i></span> Заказ #' . $id
+    : '<span class="page-icon"><i class="fa-solid fa-circle-plus"></i></span> Новый заказ';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $client_name = $_POST['client_name'];
@@ -55,6 +57,10 @@ require_once 'header.php';
 ?>
 
 <div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h3 style="margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border-color);">
+        <span class="chart-icon"><i class="fa-solid fa-rug"></i></span>
+        <?= $id > 0 ? 'Данные заказа' : 'Заполните данные заказа' ?>
+    </h3>
     <form action="" method="POST">
         <div class="form-group">
             <label>Имя клиента</label>

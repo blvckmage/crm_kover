@@ -30,7 +30,7 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-$page_title = 'Список заказов';
+$page_title = '<span class="page-icon"><i class="fa-solid fa-clipboard-list"></i></span> Список заказов';
 require_once 'header.php';
 
 $where = [];
@@ -71,24 +71,34 @@ $stmt->execute($params);
 $orders = $stmt->fetchAll();
 ?>
 
-<form method="GET" action="orders.php" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-    <input type="text" name="search" placeholder="Поиск по имени, номеру или ID" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" class="form-control" style="flex: 1; min-width: 200px; padding: 8px 12px;">
-    <select name="status_filter" class="form-control" style="width: auto; padding: 8px 12px;">
-        <option value="">Все статусы</option>
-        <?php foreach($statuses as $name => $class): ?>
-            <option value="<?= $name ?>" <?= (isset($_GET['status_filter']) && $_GET['status_filter'] === $name) ? 'selected' : '' ?>><?= $name ?></option>
-        <?php endforeach; ?>
-    </select>
-    <button type="submit" class="btn"><i class="fa-solid fa-search"></i> Найти</button>
-    <?php if(!empty($_GET['search']) || !empty($_GET['status_filter'])): ?>
-        <a href="orders.php" class="btn btn-secondary">Сбросить</a>
-    <?php endif; ?>
-</form>
+<div class="card" style="padding:18px 20px; margin-bottom:18px;">
+    <form method="GET" action="orders.php" style="display: flex; gap: 10px; flex-wrap: wrap; align-items:center;">
+        <div style="position:relative; flex:1; min-width:200px;">
+            <i class="fa-solid fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:13px;"></i>
+            <input type="text" name="search" placeholder="Поиск по имени, номеру или ID" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" class="form-control" style="padding-left:36px;">
+        </div>
+        <select name="status_filter" class="form-control" style="width:auto; min-width:150px;">
+            <option value="">Все статусы</option>
+            <?php foreach($statuses as $name => $class): ?>
+                <option value="<?= $name ?>" <?= (isset($_GET['status_filter']) && $_GET['status_filter'] === $name) ? 'selected' : '' ?>><?= $name ?></option>
+            <?php endforeach; ?>
+        </select>
+        <button type="submit" class="btn"><i class="fa-solid fa-search"></i> Найти</button>
+        <?php if(!empty($_GET['search']) || !empty($_GET['status_filter'])): ?>
+            <a href="orders.php" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Сбросить</a>
+        <?php endif; ?>
+    </form>
+</div>
 
-<div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-    <a href="order_form.php" class="btn"><i class="fa-solid fa-plus"></i> Создать заказ</a>
-    <a href="export.php?format=excel" class="btn btn-secondary"><i class="fa-solid fa-file-excel"></i> Экспорт Excel</a>
-    <a href="export.php?format=csv" class="btn btn-secondary"><i class="fa-solid fa-file-csv"></i> Экспорт CSV</a>
+<div style="margin-bottom: 18px; display: flex; gap: 10px; flex-wrap: wrap; align-items:center;">
+    <a href="order_form.php" class="btn"><i class="fa-solid fa-circle-plus"></i> Создать заказ</a>
+    <a href="export.php?format=excel" class="btn btn-secondary"><i class="fa-solid fa-file-excel" style="color:#10b981;"></i> Excel</a>
+    <a href="export.php?format=csv" class="btn btn-secondary"><i class="fa-solid fa-file-csv" style="color:#3b82f6;"></i> CSV</a>
+    <?php if($total_records > 0): ?>
+    <span style="margin-left:auto;font-size:13px;color:var(--text-muted);font-weight:500;">
+        Найдено: <b style="color:var(--text-main);"><?= number_format($total_records, 0, '', ' ') ?></b> заказ(ов)
+    </span>
+    <?php endif; ?>
 </div>
 
 <?php if(isset($_GET['msg'])): ?>
@@ -157,14 +167,14 @@ $orders = $stmt->fetchAll();
 </div>
 
 <?php if($total_pages > 1): ?>
-<div style="margin-top: 20px; display: flex; justify-content: center; gap: 5px; margin-bottom: 30px; flex-wrap: wrap;">
+<div class="pagination">
     <?php for($i = 1; $i <= $total_pages; $i++): ?>
-        <?php 
+        <?php
             $qs = $_GET;
             $qs['page'] = $i;
             $link = '?' . http_build_query($qs);
         ?>
-        <a href="<?= $link ?>" class="btn <?= $i === $page ? '' : 'btn-secondary' ?>" style="padding: 6px 12px;"><?= $i ?></a>
+        <a href="<?= $link ?>" class="btn <?= $i === $page ? '' : 'btn-secondary' ?>" style="padding:6px 13px;min-width:36px;"><?= $i ?></a>
     <?php endfor; ?>
 </div>
 <?php endif; ?>

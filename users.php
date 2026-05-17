@@ -33,14 +33,16 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-$page_title = 'Пользователи';
+$page_title = '<span class="page-icon"><i class="fa-solid fa-users"></i></span> Пользователи';
 require_once 'header.php';
 
 $users = $pdo->query("SELECT id, username, role, created_at FROM users ORDER BY id DESC")->fetchAll();
 ?>
 
-<div class="card" style="max-width: 600px; margin-bottom: 30px;">
-    <h3>Добавить пользователя</h3>
+<div class="card" style="max-width: 600px; margin-bottom: 24px;">
+    <h3 style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border-color);">
+        <span class="chart-icon"><i class="fa-solid fa-user-plus"></i></span> Добавить пользователя
+    </h3>
     <?php if (isset($error)): ?>
         <div class="alert alert-error" style="margin-top: 15px;"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
